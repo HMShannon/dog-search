@@ -62,7 +62,6 @@ body {
 
 #search-form {
   display: flex;
-
 }
 
 #main-searchbar {
@@ -90,6 +89,7 @@ body {
   width: 44px;
   height: 30px;
   margin-top: auto;
+  margin-bottom: 2px;
 }
 
 #search-button:hover {
@@ -97,18 +97,19 @@ body {
 }
 
 #auto-suggest {
-  width: 70vw;
+  position: absolute;
+  width: calc(70vw + 54px);
   list-style: none;
-  padding-left: 0;
-  background: white;
+  background: rgba(255, 255, 255, .9);
   z-index: 2;
-  margin-top: 0;
+  margin-top: 1px;
+  margin-left: 0;
+  padding-left: 0;
+  top: 100%;
 }
 
 .search-suggestion {
   font-size: 18px;
-  padding: 5px;
-  padding-left: 3px;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
   margin-right: auto;
   color: rgba(0, 0, 0, .7);
@@ -169,7 +170,7 @@ body {
 
 .result-image {
   margin: 5px;
-  max-width: 120px;
+  max-width: 100px;
   max-height: 120px;
 }
 
@@ -247,13 +248,32 @@ body {
   height: 80px;
   width: 100%;
   margin-top: auto;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
 }
+
+#site-footer a {
+  width: 32px;
+  height: 32px;
+  background: url('../images/GitHub-Mark-32px.png');
+  background-repeat: no-repeat;
+
+}
+
 
 
 /* --------------
   Media Queries
 -------------- */
 
+
+@media (min-width: 260px) {
+  .result-image {
+    max-width: 120px;
+  }
+}
 
 
 @media (min-width: 450px) {
@@ -306,7 +326,7 @@ body {
   }
 
   #auto-suggest {
-    width: 40vw;
+    width: calc(40vw + 64px);
   }
 
   #results-container {

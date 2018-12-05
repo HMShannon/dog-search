@@ -10,7 +10,7 @@ const Autosuggest = (props) => {
           if (current.startsWith(props.searchInput) || current.split(' ').length > 1 && current.split(' ')[1].startsWith(props.searchInput)) {
             return current;
           }
-        }).map((current) => {
+        }).splice(10).map((current) => {
           return <li className="search-suggestion" data-value={current} key={current} onMouseDown={props.updateSearch}>{current}</li>;
         })}
       </ul>

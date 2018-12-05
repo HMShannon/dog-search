@@ -1,2 +1,2 @@
 # dog-search
-Small project made with React/React-Router
+Small image search SPA made with React/React-Router, using the Dog API.
