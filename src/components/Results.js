@@ -19,7 +19,7 @@ class Results extends Component {
 
     this.getResults = (breed) => {
       let breedToSearch = breed;
-      if (breedToSearch.split(' ').length != 1) {
+      if (breedToSearch.split(' ').length !== 1) {
         let tempBreed = breedToSearch.split(' ')[breedToSearch.split(' ').length-1];
         for (let i = 0; i < breedToSearch.split(' ').length-1; i++) {
           tempBreed += `-${breedToSearch.split(' ')[i]}`;
@@ -30,7 +30,7 @@ class Results extends Component {
         .then(res => {
           if (res.ok) {
             return res.json();
-          } else if (res.status == 404) {
+          } else if (res.status === 404) {
             this.setState({is404: true});
           }
         })
@@ -66,14 +66,14 @@ class Results extends Component {
   }
 
 
-  componentWillMount() {
+  componentDidMount() {
     this.getResults(this.props.match.params.breed);
     window.addEventListener('scroll', this.updateDisplayed);
   }
 
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.breed != prevProps.match.params.breed) {
+    if (this.props.match.params.breed !== prevProps.match.params.breed) {
       this.setState({
         isLoading: true
       });
@@ -85,6 +85,7 @@ class Results extends Component {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.updateDisplayed);
   }
+
 
   render() {
 

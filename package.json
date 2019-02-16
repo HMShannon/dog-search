@@ -6,8 +6,8 @@
     "react-scripts": "^1.0.6"
   },
   "dependencies": {
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "react-router-dom": "^4.3.1",
     "webpack-dev-server": "^3.1.10"
   },

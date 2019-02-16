@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom';
 
 class OpenImage extends Component {
 
-  componentWillMount() {
+  componentDidMount() {
     document.querySelector('body').classList.add('modal-open');
   }
 

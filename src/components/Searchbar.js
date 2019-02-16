@@ -12,7 +12,7 @@ class Searchbar extends Component {
 
     this.onSubmit = (e) => {
       e.preventDefault();
-      if (this.props.searchInput == '') {
+      if (this.props.searchInput === '') {
         this.props.history.push(this.props.history[this.props.history.length-1]);
       } else {
         this.props.history.push(`/search/${this.props.searchInput}`);

@@ -32,7 +32,7 @@ class Home extends Component {
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch('https://dog.ceo/api/breeds/image/random')
       .then(res => res.json())
       .then(data => {

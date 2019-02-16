@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
-/* =================================
-  ELEMENT STYLES
-==================================== */
-
 
 * {
   box-sizing: border-box;
@@ -259,7 +255,6 @@ body {
   height: 32px;
   background: url('../images/GitHub-Mark-32px.png');
   background-repeat: no-repeat;
-
 }
 
 
@@ -309,6 +304,10 @@ body {
 
 
 @media (min-width: 768px) {
+
+  #outer-results-container {
+    margin-left: calc(100vw - 100%);
+  }
 
   #home-content {
     margin-top: 100px;
@@ -368,6 +367,3 @@ body {
   }
 
 }
-
-
-/* horizontal bar disappears at 1456. Vertical scroll bar? ----- */

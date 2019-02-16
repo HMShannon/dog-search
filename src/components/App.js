@@ -22,7 +22,7 @@ class App extends Component {
 
 
     this.updateSearch = (e) => {
-      if (e.target.tagName == 'LI') {
+      if (e.target.tagName === 'LI') {
         this.setState({searchInput: e.target.textContent});
       } else {
         this.setState({
@@ -48,9 +48,10 @@ class App extends Component {
       this.setState({searchFocus: false});
     }
 
+
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch('https://dog.ceo/api/breeds/list/all')
       .then((res) => res.json())
       .then((data) => {
@@ -72,7 +73,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="container">
+        <div className="container" ref={this.appRef}>
           <Header></Header>
           <Searchbar
             updateSearch={this.updateSearch}
