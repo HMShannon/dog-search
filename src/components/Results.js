@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {Link, Route} from 'react-router-dom';
 
+import {connect} from 'react-redux';
+
+import {formatSearch} from '../store/actions/dogActions';
+import {getResults} from '../store/actions/dogActions';
+
 import Image from './Image.js';
 import OpenImage from './OpenImage.js';
 
@@ -9,55 +14,16 @@ class Results extends Component {
   constructor() {
     super();
 
-    this.state = {
-      results: [],
-      displayed: [],
-      isLoading: true,
-      is404: false
-    }
-
-
-    this.getResults = (breed) => {
-      let breedToSearch = breed;
-      if (breedToSearch.split(' ').length !== 1) {
-        let tempBreed = breedToSearch.split(' ')[breedToSearch.split(' ').length-1];
-        for (let i = 0; i < breedToSearch.split(' ').length-1; i++) {
-          tempBreed += `-${breedToSearch.split(' ')[i]}`;
-        }
-        breedToSearch = tempBreed;
-      }
-      fetch(`https://dog.ceo/api/breed/${breedToSearch}/images`)
-        .then(res => {
-          if (res.ok) {
-            return res.json();
-          } else if (res.status === 404) {
-            this.setState({is404: true});
-          }
-        })
-        .then(data => {
-          if (data) {
-            this.setState({
-            results: data.message,
-            displayed: data.message.slice(0, 12),
-            isLoading: false
-          })
-        }
-      })
-        .catch((error) => console.log('There was a problem: ', error.message));
-    }
-
 
     this.updateDisplayed = () => {
       // get length of displayed and pass it as the index of results
       let screenBottom = window.screenY + window.outerHeight;
-      if (!this.state.isLoading) {
+      if (!this.props.isLoading) {
         let lastImage = document.querySelector('#results-container').lastChild;
         let top = lastImage.getBoundingClientRect().top;
 
         if (screenBottom >= top) {
-          this.setState({
-            displayed: [...this.state.displayed, ...this.state.results.slice(this.state.displayed.length, this.state.displayed.length+12)]
-          });
+          this.props.updateDisplayed(this.props.results.slice(this.props.displayed.length, this.props.displayed.length+12))
         }
       }
 
@@ -67,36 +33,38 @@ class Results extends Component {
 
 
   componentDidMount() {
-    this.getResults(this.props.match.params.breed);
+    this.props.getResults(formatSearch(this.props.match.params.breed));
     window.addEventListener('scroll', this.updateDisplayed);
   }
 
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.breed !== prevProps.match.params.breed) {
-      this.setState({
-        isLoading: true
-      });
-      this.getResults(this.props.match.params.breed);
-      window.addEventListener('scroll', this.updateDisplayed);
+      this.props.toggleLoading(true);
+      this.props.toggle404(false);
+      this.props.clearDisplayed();
+      this.props.getResults(this.props.match.params.breed);
+      window.addEventListener('scroll', this.props.updateDisplayed);
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.updateDisplayed);
+    this.props.clearDisplayed();
+    window.removeEventListener('scroll', this.props.updateDisplayed);
   }
 
 
   render() {
 
-    if (this.state.isLoading) {
-      return <p>Loading...</p>;
-    } else if (!this.state.is404) {
+    if (this.props.isLoading) {
+
+      return <p className="results-paragraph">Loading...</p>;
+    } else if (!this.props.is404) {
       return (
         <div id="outer-results-container">
-          <p id="displaying-results">Displaying results for '{this.props.match.params.breed}'</p>
-          <div id="results-container">
-            {this.state.displayed.map((current, index) => {
+          <p className="results-paragraph">Displaying results for '{this.props.match.params.breed}'</p>
+          <div id="results-container" onClick={(e) => e.target.tagName === 'IMG' ? this.props.setOpenImage(e.target.src) : null}>
+            {this.props.displayed.map((current, index) => {
               return (
                 <Link to={`/search/${this.props.match.params.breed}/${current}`} key={current} >
                   <Image src={current} key={index} />
@@ -104,11 +72,11 @@ class Results extends Component {
               )
             })}
           </div>
-            <Route path="/search/:breed/https://images.dog.ceo/breeds/:breed/:img" render={(props) => <OpenImage src={this.state.openImage} {...props} />} />
+            <Route path="/search/:breed/https://images.dog.ceo/breeds/:breed/:img" render={(props) => <OpenImage {...props} />} />
         </div>
       )
     } else {
-      return <p>No results found for '{this.props.match.params.breed}'</p>;
+      return <p className="results-paragraph">No results found for '{this.props.match.params.breed}'</p>;
     }
 
 
@@ -116,4 +84,27 @@ class Results extends Component {
 
 }
 
-export default Results;
+
+const mapStateToProps = (state) => {
+  return {
+    results: state.results,
+    displayed: state.displayed,
+    isLoading: state.isLoading,
+    is404: state.is404
+  };
+};
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getResults: (breed) => dispatch(getResults(breed)),
+    updateDisplayed: (moreResults) => dispatch({type: 'UPDATE_DISPLAYED', payload: moreResults}),
+    clearDisplayed: () => dispatch({type: 'CLEAR_DISPLAYED'}),
+    toggleLoading: (val) => dispatch({type: 'TOGGLE_LOADING', payload: val}),
+    toggle404: (val) => dispatch({type: 'TOGGLE_404', payload: val}),
+    setOpenImage: (src) => dispatch({type: 'SET_OPEN_IMAGE', payload: src}),
+  };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Results);

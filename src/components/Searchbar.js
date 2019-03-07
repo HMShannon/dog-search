@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 
+import {connect} from 'react-redux';
+
 import Autosuggest from './Autosuggest.js';
 
 class Searchbar extends Component {
@@ -9,11 +11,10 @@ class Searchbar extends Component {
     super();
 
 
-
     this.onSubmit = (e) => {
       e.preventDefault();
       if (this.props.searchInput === '') {
-        this.props.history.push(this.props.history[this.props.history.length-1]);
+        return;
       } else {
         this.props.history.push(`/search/${this.props.searchInput}`);
         this.props.resetSearch();
@@ -21,6 +22,9 @@ class Searchbar extends Component {
     }
 
   }
+
+
+
 
   render() {
     return (
@@ -30,6 +34,7 @@ class Searchbar extends Component {
             type="text"
             id="main-searchbar"
             placeholder="Search by breed"
+            autoComplete="off"
             value={this.props.searchInput}
             onChange={(e) => {
               this.props.updateSearch(e);
@@ -39,11 +44,30 @@ class Searchbar extends Component {
           />
           <button type="submit" id="search-button"></button>
         </form>
-        <Autosuggest searchInput={this.props.searchInput} breedList={this.props.breedList} searchFocus={this.props.searchFocus} updateSearch={this.props.updateSearch} />
+        <Autosuggest />
       </div>
     )
   }
 
 }
 
-export default withRouter(Searchbar);
+
+const mapStateToProps = (state) => {
+  return {
+    searchInput: state.searchInput
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateSearch: (e) => {
+      dispatch({type: 'CHANGE_SEARCH_INPUT', payload: e.target.value});
+    },
+    resetSearch: () => dispatch({type: 'CLEAR_SEARCH_INPUT'}),
+    focusSearch: () => dispatch({type: 'FOCUS_SEARCH'}),
+    blurSearch: () => dispatch({type: 'BLUR_SEARCH'})
+  };
+};
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Searchbar));
