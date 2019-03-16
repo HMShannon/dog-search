@@ -4,7 +4,7 @@ const initState = {
   // dogImage and dogName are used in the Home component
   dogImage: '',
   dogName: '',
-  // searchInput, searchFocus, and autoSuggestClicked apply to the Searchbar component
+  // searchInput and searchFocus apply to the Searchbar and Autosuggest components
   searchInput: '',
   searchFocus: false,
   // the following properties apply to the Results component
@@ -24,11 +24,13 @@ export default function dogReducer(state = initState, action) {
       };
     case 'SET_DOG_IMAGE':
       return {
-        ...state
+        ...state,
+        dogImage: action.payload
       };
     case 'SET_DOG_NAME':
       return {
-        ...state
+        ...state,
+        dogName: action.payload
       };
     case 'CHANGE_SEARCH_INPUT':
       return {

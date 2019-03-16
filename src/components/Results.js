@@ -67,7 +67,7 @@ class Results extends Component {
             {this.props.displayed.map((current, index) => {
               return (
                 <Link to={`/search/${this.props.match.params.breed}/${current}`} key={current} >
-                  <Image src={current} key={index} />
+                  <Image src={current} key={current} />
                 </Link>
               )
             })}

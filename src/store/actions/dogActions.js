@@ -20,6 +20,35 @@ export default function fetchBreeds() {
 };
 
 
+function setName(message) {
+  let imageSplit = message.split('/');
+
+  let dogName = imageSplit[4][0].toUpperCase() + imageSplit[4].slice(1);
+
+  if (dogName.includes('-')) {
+    let temp = imageSplit[4].split('-');
+    let temp1 = temp[1][0].toUpperCase() + temp[1].slice(1);
+    let temp0 = temp[0][0].toUpperCase() + temp[0].slice(1);
+    dogName = `${temp1} ${temp0}`;
+  }
+  return dogName;
+}
+
+
+export function getDog() {
+  return (dispatch) => {
+    fetch('https://dog.ceo/api/breeds/image/random')
+      .then(res => res.json())
+      .then(data => {
+        dispatch({type: 'SET_DOG_IMAGE', payload: data.message});
+        dispatch({type: 'SET_DOG_NAME', payload: setName(data.message)});
+      })
+      .catch((error) => console.log('There was a', error));
+  }
+}
+
+
+
 export function formatSearch(breed) {
   if (breed.split(' ').length !== 1) {
     return breed.split(' ').reverse().join(' ').replace(' ', '-');
